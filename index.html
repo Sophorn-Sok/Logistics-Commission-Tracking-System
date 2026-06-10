@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logistics Commission Tracking System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <div class="logo-mark">KIUQ</div>
+        <div>
+          <p class="eyebrow">Internal Operations Dashboard</p>
+          <h1>Logistics Commission Tracking System</h1>
+          <p class="subtitle">Track loads, negotiate profit, and calculate commissions in one place.</p>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button id="themeToggle" class="ghost-button" type="button">Dark Mode</button>
+        <button id="printReport" class="primary-button" type="button">Print Report</button>
+        <button id="exportCsv" class="secondary-button" type="button">Export CSV</button>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <section class="kpi-panel">
+        <div class="panel-header">
+          <div>
+            <p class="section-label">Dashboard</p>
+            <h2>Key Performance Indicators</h2>
+          </div>
+          <div class="company-badge">Company Logo Placeholder</div>
+        </div>
+        <div class="kpi-grid">
+          <article class="kpi-card">
+            <span>Total Loads</span>
+            <strong id="totalLoads">0</strong>
+          </article>
+          <article class="kpi-card">
+            <span>Total Revenue (Our Rate)</span>
+            <strong id="totalRevenue">$0.00</strong>
+          </article>
+          <article class="kpi-card">
+            <span>Total Driver Cost</span>
+            <strong id="totalDriverCost">$0.00</strong>
+          </article>
+          <article class="kpi-card">
+            <span>Total Profit</span>
+            <strong id="totalProfit">$0.00</strong>
+          </article>
+          <article class="kpi-card accent">
+            <span>Estimated Commission</span>
+            <strong id="estimatedCommission">$0.00</strong>
+          </article>
+        </div>
+      </section>
+
+      <section class="card form-card">
+        <div class="panel-header compact">
+          <div>
+            <p class="section-label">Load Entry</p>
+            <h2 id="formTitle">Add Load</h2>
+          </div>
+          <button id="cancelEdit" class="text-button hidden" type="button">Cancel Edit</button>
+        </div>
+        <form id="loadForm" class="load-form">
+          <div class="form-grid">
+            <label>
+              <span>Date</span>
+              <input type="date" id="date" required />
+            </label>
+            <label>
+              <span>Route Name</span>
+              <input type="text" id="routeName" placeholder="Example: Charlotte to Newark" required />
+            </label>
+            <label>
+              <span>Region</span>
+              <select id="region" required>
+                <option value="">Select region</option>
+                <option>Northeast</option>
+                <option>Southeast</option>
+                <option>Midwest</option>
+                <option>West</option>
+              </select>
+            </label>
+            <label>
+              <span>Customer Name</span>
+              <input type="text" id="customerName" placeholder="Customer or broker name" required />
+            </label>
+            <label>
+              <span>Our Rate ($)</span>
+              <input type="number" id="ourRate" min="0" step="0.01" placeholder="15500" required />
+            </label>
+            <label>
+              <span>Driver/Broker Rate ($)</span>
+              <input type="number" id="driverRate" min="0" step="0.01" placeholder="14200" required />
+            </label>
+            <label class="full-span">
+              <span>Notes</span>
+              <textarea id="notes" rows="3" placeholder="Negotiation notes, pickup details, special instructions"></textarea>
+            </label>
+          </div>
+          <div class="form-actions">
+            <div class="live-profit">
+              <span>Calculated Profit</span>
+              <strong id="calculatedProfit">$0.00</strong>
+            </div>
+            <button class="primary-button" type="submit" id="submitButton">Add Load</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card commission-card">
+        <div class="panel-header compact">
+          <div>
+            <p class="section-label">Commission Calculator</p>
+            <h2>Monthly Commission Settings</h2>
+          </div>
+        </div>
+        <div class="commission-row">
+          <label>
+            <span>Commission Percentage</span>
+            <div class="input-suffix">
+              <input type="number" id="commissionPercent" min="0" max="100" step="0.1" value="10" />
+              <span>%</span>
+            </div>
+          </label>
+          <div class="commission-result">
+            <span>Commission Earned</span>
+            <strong id="commissionEarned">$0.00</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="card filter-card">
+        <div class="panel-header compact">
+          <div>
+            <p class="section-label">Load Management</p>
+            <h2>Search, Filter, Sort</h2>
+          </div>
+        </div>
+        <div class="filters">
+          <label>
+            <span>Search</span>
+            <input type="search" id="searchInput" placeholder="Search by customer or route" />
+          </label>
+          <label>
+            <span>Region Filter</span>
+            <select id="regionFilter">
+              <option value="all">All Regions</option>
+              <option>Northeast</option>
+              <option>Southeast</option>
+              <option>Midwest</option>
+              <option>West</option>
+            </select>
+          </label>
+          <button id="clearFilters" class="ghost-button" type="button">Clear Filters</button>
+        </div>
+      </section>
+
+      <section class="card table-card">
+        <div class="panel-header compact">
+          <div>
+            <p class="section-label">Load Table</p>
+            <h2>Tracked Loads</h2>
+          </div>
+          <p class="helper-text">Click Date to sort newest or oldest first.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th><button id="sortDate" class="sort-button" type="button">Date <span id="sortIndicator">↓</span></button></th>
+                <th>Route</th>
+                <th>Region</th>
+                <th>Customer</th>
+                <th>Our Rate</th>
+                <th>Driver Rate</th>
+                <th>Profit</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="loadTableBody"></tbody>
+          </table>
+        </div>
+        <p id="emptyState" class="empty-state hidden">No loads match the current filters.</p>
+      </section>
+
+      <section class="card summary-card">
+        <div class="panel-header compact">
+          <div>
+            <p class="section-label">Monthly Summary</p>
+            <h2 id="summaryTitle">This Month</h2>
+          </div>
+        </div>
+        <div class="summary-grid">
+          <div><span>Total Loads Completed</span><strong id="monthlyLoads">0</strong></div>
+          <div><span>Total Revenue</span><strong id="monthlyRevenue">$0.00</strong></div>
+          <div><span>Total Driver Costs</span><strong id="monthlyDriverCost">$0.00</strong></div>
+          <div><span>Total Profit Generated</span><strong id="monthlyProfit">$0.00</strong></div>
+          <div><span>Commission Earned</span><strong id="monthlyCommission">$0.00</strong></div>
+        </div>
+      </section>
+
+
+      <section class="card routes-card">
+        <div class="panel-header compact">
+          <div>
+            <p class="section-label">Top Routes</p>
+            <h2>Most Profitable Routes</h2>
+          </div>
+        </div>
+        <div id="topRoutes" class="route-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

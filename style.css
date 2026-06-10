@@ -747,12 +747,23 @@ tbody tr td {
   }
 }
 
+.print-only-header {
+  display: none;
+}
+
 @media print {
-  body {
-    background: #fff;
-    color: #000;
+  @page {
+    margin: 1.5cm;
+    size: auto;
   }
 
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 11pt;
+  }
+
+  /* Hide UI elements not needed for a report */
   .topbar-actions,
   .filter-card,
   .form-card,
@@ -760,14 +771,117 @@ tbody tr td {
   .charts-card,
   .routes-card,
   #emptyState,
-  .action-group {
+  .action-group,
+  .helper-text,
+  #cancelEdit,
+  .ghost-button,
+  #themeToggle,
+  .topbar {
     display: none !important;
+  }
+
+  /* Show print-only header */
+  .print-only-header {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #000;
+  }
+
+  .print-brand {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .print-brand strong {
+    font-size: 18pt;
+  }
+
+  #printTimestamp {
+    font-size: 10pt;
+    color: #666;
+  }
+
+  /* Reset layout for print */
+  .app-shell {
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .dashboard-grid {
+    display: block; /* Stack everything vertically */
   }
 
   .card,
   .kpi-panel {
-    box-shadow: none;
-    background: #fff;
+    box-shadow: none !important;
+    border: 1px solid #eee !important;
+    margin-bottom: 20px;
+    page-break-inside: avoid;
+    background: white !important;
+  }
+
+  .kpi-grid,
+  .summary-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 10px;
+  }
+
+  .kpi-card,
+  .summary-grid > div {
+    border: 1px solid #eee !important;
+    background: #fdfdfd !important;
+  }
+
+  /* Table adjustments for print */
+  .table-wrap {
+    overflow: visible !important;
+  }
+
+  table {
+    width: 100% !important;
+    min-width: 100% !important;
+    border: 1px solid #eee;
+  }
+
+  th, td {
+    border-bottom: 1px solid #eee !important;
+    padding: 8px 6px !important;
+    font-size: 10pt;
+  }
+
+  /* Hide the Actions column entirely */
+  th:last-child,
+  td:last-child {
+    display: none !important;
+  }
+
+  /* Make header backgrounds visible in print */
+  thead th {
+    background: #f8f9fa !important;
+    color: #000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .sort-button span {
+    display: none; /* Hide sort indicators */
+  }
+
+  h1 {
+    font-size: 20pt;
+    margin: 0;
+  }
+
+  .eyebrow {
+    color: #666 !important;
+  }
+
+  .subtitle {
+    color: #444 !important;
   }
 }
 

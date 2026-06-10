@@ -42,7 +42,8 @@ const elements = {
   formTitle: document.getElementById('formTitle'),
   submitButton: document.getElementById('submitButton'),
   emptyState: document.getElementById('emptyState'),
-  topRoutes: document.getElementById('topRoutes')
+  topRoutes: document.getElementById('topRoutes'),
+  printTimestamp: document.getElementById('printTimestamp')
 };
 
 let loads = loadFromStorage(STORAGE_KEYS.loads, []);
@@ -404,7 +405,12 @@ function initializeEvents() {
   elements.themeToggle.addEventListener('click', () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   });
-  elements.printReport.addEventListener('click', () => window.print());
+  elements.printReport.addEventListener('click', () => {
+    if (elements.printTimestamp) {
+      elements.printTimestamp.textContent = `Printed on: ${new Date().toLocaleString()}`;
+    }
+    window.print();
+  });
   elements.exportCsv.addEventListener('click', exportCsvFile);
   elements.cancelEdit.addEventListener('click', resetForm);
   window.addEventListener('resize', () => {
